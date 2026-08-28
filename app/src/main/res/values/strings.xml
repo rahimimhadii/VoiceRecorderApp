@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Voice Recorder</string>
+    <string name="ready">Ready to record</string>
+    <string name="recording">Recording</string>
+    <string name="waiting_for_microphone">Waiting for microphone</string>
+    <string name="start_recording">Start recording</string>
+    <string name="stop_recording">Stop recording</string>
+    <string name="settings">Settings</string>
+    <string name="recent_recordings">Recent recordings</string>
+    <string name="empty_library">Your recordings will appear here</string>
+    <string name="microphone_permission_required">Microphone access is required to record.</string>
+    <string name="notification_permission_rationale">Notifications are required to show the active recording service.</string>
+    <string name="recording_channel">Active recording</string>
+    <string name="recording_channel_description">Shows microphone recording status</string>
+    <string name="notification_recording">Voice Recorder is recording</string>
+    <string name="notification_waiting">Recording paused — waiting for microphone</string>
+    <string name="notification_stop">Stop</string>
+    <string name="format">Recording format</string>
+    <string name="format_m4a">M4A / AAC</string>
+    <string name="format_wav">WAV / PCM</string>
+    <string name="automatic_stop">Automatic stop (minutes)</string>
+    <string name="safety_limit">Maximum safety limit (hours)</string>
+    <string name="save">Save</string>
+    <string name="settings_saved">Settings saved</string>
+    <string name="invalid_minutes">Enter 1–10080 minutes</string>
+    <string name="invalid_hours">Enter 1–168 hours</string>
+    <string name="play">Play</string><string name="pause">Pause</string>
+    <string name="delete">Delete</string><string name="rename">Rename</string><string name="share">Share</string>
+    <string name="rename_recording">Rename recording</string>
+    <string name="widget_start_description">Start recording</string>
+    <string name="widget_stop_description">Stop recording</string>
+</resources>

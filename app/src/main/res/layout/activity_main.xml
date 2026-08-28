@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_gradient">
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/app_name" android:textAppearance="?attr/textAppearanceHeadlineMedium" android:textStyle="bold" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/settingsButton" style="@style/Widget.Material3.Button.TextButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings" />
+            </LinearLayout>
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" app:cardCornerRadius="28dp" app:cardElevation="0dp" app:strokeWidth="1dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical" android:padding="32dp">
+                    <View android:id="@+id/levelView" android:layout_width="84dp" android:layout_height="8dp" android:background="@color/accent" android:alpha="0.35" />
+                    <TextView android:id="@+id/statusText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="@string/ready" android:textAppearance="?attr/textAppearanceTitleMedium" />
+                    <TextView android:id="@+id/timerText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:fontFamily="monospace" android:text="00:00:00" android:textAppearance="?attr/textAppearanceDisplayMedium" android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/recordButton" android:layout_width="match_parent" android:layout_height="64dp" android:layout_marginTop="28dp" android:text="@string/start_recording" app:cornerRadius="22dp" app:icon="@drawable/ic_mic" app:iconGravity="textStart" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="30dp" android:layout_marginBottom="12dp" android:text="@string/recent_recordings" android:textAppearance="?attr/textAppearanceTitleLarge" android:textStyle="bold" />
+            <TextView android:id="@+id/emptyText" android:layout_width="match_parent" android:layout_height="100dp" android:gravity="center" android:text="@string/empty_library" android:textAppearance="?attr/textAppearanceBodyLarge" />
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/recordingsList" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

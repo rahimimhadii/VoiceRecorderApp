@@ -1,0 +1,7 @@
+<resources>
+    <color name="accent">#7C8CFF</color><color name="accent_soft">#DCE1FF</color>
+    <color name="surface_light">#F7F8FC</color><color name="surface_dark">#0D1117</color>
+    <color name="card_dark">#161B22</color><color name="danger">#F05D6F</color>
+    <color name="white">#FFFFFF</color><color name="black">#000000</color>
+    <color name="launcher_icon_background">#161B22</color>
+</resources>
