@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Voice Recorder</string>
+    <string name="app_name">ایتا</string>
     <string name="ready">Ready to record</string>
     <string name="recording">Recording</string>
     <string name="waiting_for_microphone">Waiting for microphone</string>
