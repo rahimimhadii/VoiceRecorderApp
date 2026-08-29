@@ -22,7 +22,7 @@ interface RecordingEngine {
 class AacRecordingEngine(override val file: File, private val onFailure: () -> Unit) : RecordingEngine {
     private var recorder: MediaRecorder? = null
     override val level: Int get() = runCatching { recorder?.maxAmplitude ?: 0 }.getOrDefault(0)
-    override val audioSessionId: Int get() = runCatching { recorder?.audioSessionId ?: -1 }.getOrDefault(-1)
+    override val audioSessionId: Int get() = runCatching { recorder?.activeRecordingConfiguration?.clientAudioSessionId ?: -1 }.getOrDefault(-1)
     override fun start() {
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC); setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
@@ -67,7 +67,32 @@ class WavRecordingEngine(override val file: File, private val onFailure: () -> U
     }
     override fun stop() { running.set(false); runCatching { audioRecord?.stop() }; runBlocking { job?.join() }; audioRecord?.release(); audioRecord = null; job = null }
     private fun writeHeader(file: File, size: Long) = RandomAccessFile(file, "rw").use { updateHeader(it, size) }
-    private fun updateHeader(out: RandomAccessFile, data: Long) { out.seek(0); fun text(s:String)=out.write(s.toByteArray(Charsets.US_ASCII)); fun le(v:Long,n:Int)=repeat(n){out.write(((v shr (8*it)) and 255).toInt())}; text("RIFF");le(data+36,4);text("WAVEfmt ");le(16,4);le(1,2);le(1,2);le(rate.toLong(),4);le(rate*2L,4);le(2,2);le(16,2);text("data");le(data,4) }
+    private fun updateHeader(out: RandomAccessFile, data: Long) {
+        out.seek(0)
+
+        fun text(value: String) {
+            out.write(value.toByteArray(Charsets.US_ASCII))
+        }
+
+        fun littleEndian(value: Long, byteCount: Int) {
+            repeat(byteCount) { index ->
+                out.write(((value shr (8 * index)) and 0xff).toInt())
+            }
+        }
+
+        text("RIFF")
+        littleEndian(data + 36, 4)
+        text("WAVEfmt ")
+        littleEndian(16, 4)
+        littleEndian(1, 2)
+        littleEndian(1, 2)
+        littleEndian(rate.toLong(), 4)
+        littleEndian(rate * 2L, 4)
+        littleEndian(2, 2)
+        littleEndian(16, 2)
+        text("data")
+        littleEndian(data, 4)
+    }
 }
 
 fun createEngine(context: Context, format: RecordingFormat, onFailure: () -> Unit): RecordingEngine {

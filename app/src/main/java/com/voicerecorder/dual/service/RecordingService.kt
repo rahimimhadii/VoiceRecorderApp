@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.AudioRecordingConfiguration
+import android.media.MediaRecorder
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -45,8 +46,14 @@ class RecordingService : Service() {
     private var handlingLoss = false
     private val audioCallback = object : AudioManager.AudioRecordingCallback() {
         override fun onRecordingConfigChanged(configs: MutableList<AudioRecordingConfiguration>?) {
-            val id = engine?.audioSessionId ?: return
-            val own = configs?.firstOrNull { it.clientAudioSessionId == id }
+            val activeEngine = engine ?: return
+            val own = configs?.firstOrNull {
+                if (activeEngine.audioSessionId > 0) {
+                    it.clientAudioSessionId == activeEngine.audioSessionId
+                } else {
+                    it.clientAudioSource == MediaRecorder.AudioSource.MIC
+                }
+            }
             if (own?.isClientSilenced == true) scope.launch { microphoneLost() }
         }
     }
@@ -115,7 +122,7 @@ class RecordingService : Service() {
         if (session == null) return
         engine?.let { runCatching { it.stop() }; it.file.delete() }; engine = null
         val current = session!!
-        RecordingState.set(RecordingUiState(RecorderStatus.WAITING_FOR_MIC, current.startedAt, System.currentTimeMillis() - current.startedAt, message))
+        RecordingState.set(RecordingUiState(RecorderStatus.WAITING_FOR_MIC, current.startedAt, System.currentTimeMillis() - current.startedAt, message = message))
         startForegroundNow(true); scheduleRetry()
     }
 
@@ -138,10 +145,11 @@ class RecordingService : Service() {
         RecordingState.set(RecordingUiState()); ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE); stopSelf()
     }
 
-    private fun publish(value: RecordingEngine, prefix: String, current: StoredSession = session ?: return) {
+    private fun publish(value: RecordingEngine, prefix: String, current: StoredSession? = session) {
+        val activeSession = current ?: return
         if (value.file.length() <= 44) { value.file.delete(); return }
         val stamp = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(Date())
-        repository.publish(value.file, "${prefix}_${stamp}.${current.format.extension}", current.format, current.id)
+        repository.publish(value.file, "${prefix}_${stamp}.${activeSession.format.extension}", activeSession.format, activeSession.id)
     }
     private fun expired(): Boolean { val current = session ?: return true; return System.currentTimeMillis() - current.startedAt >= current.limitMillis }
     private fun notification(waiting: Boolean): Notification {
